@@ -53,14 +53,10 @@ public class RandomBot implements Bot {
         Point head = gs.head;
         Map<Integer, List<Point>> bodies = getBodies(field);
 
-        // TODO this should be in the control loop
-        if (!bodies.containsKey(id))
-            return Move.STOP; // on the border or filled area
-
         if (lastMove != null) {
             Point newHead = calculateHead(field, head, lastMove);
             // don't try to select the last move, if it is to bite itself
-            if (bodies.get(id).contains(newHead))
+            if (bodies.containsKey(id) && bodies.get(id).contains(newHead))
                 lastMove = null;
         }
 
@@ -93,19 +89,19 @@ public class RandomBot implements Bot {
                     }
                 }).get();
                 val newHead = calculateHead(field, head, move);
-                if (!bodies.get(id).contains(newHead))
+                if (bodies.containsKey(id) && !bodies.get(id).contains(newHead))
                     break;
             } else if (lastMove == null) {
                 move = Move.values()[random.nextInt(4)];
                 val newHead = calculateHead(field, head, move);
-                if (!bodies.get(id).contains(newHead))
+                if (bodies.containsKey(id) && !bodies.get(id).contains(newHead))
                     break;
             } else {
                 // higher probability to choose the last move
                 val r = random.nextInt(16);
                 move = (r < 4) ? Move.values()[r] : lastMove;
                 val newHead = calculateHead(field, head, move);
-                if (!bodies.get(id).contains(newHead))
+                if (bodies.containsKey(id) && !bodies.get(id).contains(newHead))
                     break;
             }
         }
@@ -188,7 +184,7 @@ public class RandomBot implements Bot {
             for (int j = 0; j < cols; j++) {
                 Cell cell = field[i][j];
                 if (cell.getCellType() == CellType.TAIL) {
-                    bodies.putIfAbsent(cell.getBotId(), new ArrayList<Point>())
+                    bodies.computeIfAbsent(cell.getBotId(), id-> new ArrayList<Point>())
                             .add(Point.of(i, j));
                 }
             }
