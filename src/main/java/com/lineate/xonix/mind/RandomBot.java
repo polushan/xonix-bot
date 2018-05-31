@@ -3,7 +3,7 @@ package com.lineate.xonix.mind;
 import com.lineate.xonix.mind.model.Bot;
 import com.lineate.xonix.mind.model.Cell;
 import com.lineate.xonix.mind.model.CellType;
-import com.lineate.xonix.mind.model.GameStateView;
+import com.lineate.xonix.mind.model.GameState;
 import com.lineate.xonix.mind.model.Move;
 import com.lineate.xonix.mind.model.Point;
 
@@ -46,7 +46,7 @@ public class RandomBot implements Bot {
         return name;
     }
 
-    public Move move(GameStateView gs) {
+    public Move move(GameState gs) {
         int id = gs.botId;
         Cell[][] field = gs.field;
         Point head = gs.head;
@@ -110,7 +110,7 @@ public class RandomBot implements Bot {
         return lastMove;
     }
 
-    public Move move1(GameStateView gs) {
+    public Move move1(GameState gs) {
         int id = gs.botId;
         Cell[][] field = gs.field;
         Point point = gs.head;
@@ -191,7 +191,7 @@ public class RandomBot implements Bot {
         return bodies;
     }
 
-    private Point calculateDestination(Random random, GameStateView gs , Point head) {
+    private Point calculateDestination(Random random, GameState gs , Point head) {
         int m = gs.field.length;
         int n = gs.field[0].length;
         // put several random dots into the field, and the first empty point
