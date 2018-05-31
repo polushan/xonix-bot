@@ -6,7 +6,6 @@ import com.lineate.xonix.mind.model.CellType;
 import com.lineate.xonix.mind.model.GameStateView;
 import com.lineate.xonix.mind.model.Move;
 import com.lineate.xonix.mind.model.Point;
-import lombok.val;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,15 +67,15 @@ public class RandomBot implements Bot {
             } else {
                 // probably reset if we achieved the destination
                 // gs.field.cells[head] != Cell.Empty
-                val p = destination;
+                Point p = destination;
                 if (Math.abs(p.getRow() - head.getRow()) + Math.abs(p.getCol() - head.getCol()) <= 1)
                     destination = null;
             }
             // now choose the move
             if (destination != null) {
-                val ri = destination.getRow() - head.getRow();
-                val rj = destination.getCol() - head.getCol();
-                val r = random.nextInt(4 + Math.abs(ri) + Math.abs(rj));
+                int ri = destination.getRow() - head.getRow();
+                int rj = destination.getCol() - head.getCol();
+                int r = random.nextInt(4 + Math.abs(ri) + Math.abs(rj));
                 move = ((Supplier<Move>) () -> {
                     if (r < 4)
                         return Move.values()[r];
@@ -88,19 +87,19 @@ public class RandomBot implements Bot {
                         return (rj < 0) ? Move.LEFT : Move.RIGHT;
                     }
                 }).get();
-                val newHead = calculateHead(field, head, move);
+                Point newHead = calculateHead(field, head, move);
                 if (bodies.containsKey(id) && !bodies.get(id).contains(newHead))
                     break;
             } else if (lastMove == null) {
                 move = Move.values()[random.nextInt(4)];
-                val newHead = calculateHead(field, head, move);
+                Point newHead = calculateHead(field, head, move);
                 if (bodies.containsKey(id) && !bodies.get(id).contains(newHead))
                     break;
             } else {
                 // higher probability to choose the last move
-                val r = random.nextInt(16);
+                int r = random.nextInt(16);
                 move = (r < 4) ? Move.values()[r] : lastMove;
-                val newHead = calculateHead(field, head, move);
+                Point newHead = calculateHead(field, head, move);
                 if (bodies.containsKey(id) && !bodies.get(id).contains(newHead))
                     break;
             }
@@ -133,15 +132,15 @@ public class RandomBot implements Bot {
         for (int i = 0; i < attempts; i++) {
             if (lastMove == null) {
                 move = Move.values()[random.nextInt(4)];
-                val newHead = calculateHead(field, point, move);
+                Point newHead = calculateHead(field, point, move);
                 if (!bodies.get(id).contains(newHead))
                     break;
             } else {
                 // higher probability to choose the last move
-                val r = random.nextInt(16);
+                int r = random.nextInt(16);
                 move = (r < 4) ? Move.values()[r] : lastMove;
 
-                val newHead = calculateHead(field, point, move);
+                Point newHead = calculateHead(field, point, move);
                 if (!bodies.get(id).contains(newHead))
                     break;
             }
@@ -193,14 +192,14 @@ public class RandomBot implements Bot {
     }
 
     private Point calculateDestination(Random random, GameStateView gs , Point head) {
-        val m = gs.field.length;
-        val n = gs.field[0].length;
+        int m = gs.field.length;
+        int n = gs.field[0].length;
         // put several random dots into the field, and the first empty point
         // is our destination
         for (int k = 1; k<= 16; k++) {
-            val i = random.nextInt(m);
-            val j = random.nextInt(n);
-            val p = Point.of(i, j);
+            int i = random.nextInt(m);
+            int j = random.nextInt(n);
+            Point p = Point.of(i, j);
             if (gs.field[p.getRow()][p.getCol()].getCellType() == CellType.EMPTY) {
                 if (p != head) {
                     return p;
